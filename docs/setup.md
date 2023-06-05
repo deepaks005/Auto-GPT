@@ -34,26 +34,21 @@ Get your OpenAI API key from: [https://platform.openai.com/account/api-keys](htt
 ### Set up with Docker
 
 1. Make sure you have Docker installed, see [requirements](#requirements)
-2. Pull the latest image from [Docker Hub]
+2. Create a project directory for Auto-GPT
 
         :::shell
-        docker pull significantgravitas/auto-gpt
+        mkdir Auto-GPT
+        cd Auto-GPT
 
-3. Create a folder for Auto-GPT
-4. In the folder, create a file called `docker-compose.yml` with the following contents:
+3. In the project directory, create a file called `docker-compose.yml` with the following contents:
 
         :::yaml
         version: "3.9"
         services:
           auto-gpt:
             image: significantgravitas/auto-gpt
-            depends_on:
-              - redis
             env_file:
               - .env
-            environment:
-              MEMORY_BACKEND: ${MEMORY_BACKEND:-redis}
-              REDIS_HOST: ${REDIS_HOST:-redis}
             profiles: ["exclude-from-up"]
             volumes:
               - ./auto_gpt_workspace:/app/autogpt/auto_gpt_workspace
@@ -68,11 +63,14 @@ Get your OpenAI API key from: [https://platform.openai.com/account/api-keys](htt
               #- type: bind
               #  source: ./ai_settings.yaml
               #  target: /app/ai_settings.yaml
-          redis:
-            image: "redis/redis-stack-server:latest"
 
-5. Create the necessary [configuration](#configuration) files. If needed, you can find
+4. Create the necessary [configuration](#configuration) files. If needed, you can find
     templates in the [repository].
+5. Pull the latest image from [Docker Hub]
+
+        :::shell
+        docker pull significantgravitas/auto-gpt
+
 6. Continue to [Run with Docker](#run-with-docker)
 
 !!! note "Docker only supports headless browsing"
@@ -143,9 +141,9 @@ Get your OpenAI API key from: [https://platform.openai.com/account/api-keys](htt
 
         :::yaml
         # Please specify all of these values as double-quoted strings
-        # Replace string in angled brackets (<>) to your own ID
+        # Replace string in angled brackets (<>) to your own deployment Name
         azure_model_map:
-            fast_llm_model_deployment_id: "<my-fast-llm-deployment-id>"
+            fast_llm_model_deployment_id: "<auto-gpt-deployment>"
                 ...
 
     Details can be found in the [openai-python docs], and in the [Azure OpenAI docs] for the embedding model.
